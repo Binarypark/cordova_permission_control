@@ -17,5 +17,5 @@
 		<info>
 			This plugin depends on 'inquirer'. Don't forget to install it as well.
 			npm install inquierer
-		</indo>
+		</info>
 </plugin>
