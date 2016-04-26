@@ -13,4 +13,9 @@
     <engines>
         <engine name="cordova" version=">=3.0.0" />
     </engines>
+
+		<info>
+			This plugin depends on 'inquirer'. Don't forget to install it as well.
+			npm install inquierer
+		</indo>
 </plugin>

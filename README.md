@@ -11,6 +11,7 @@ sure that everything still works as expected.__
 ## Installation
 ### Cordova CLI
 ```
+npm install inquirer
 cordova plugin add cordova_permission_control
 ```
 

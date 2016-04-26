@@ -34,6 +34,6 @@
   },
   "homepage": "https://github.com/Binarypark/cordova_permission_control#readme",
   "dependencies": {
-
+		"inquirer": "^1.0.2"
   }
 }
