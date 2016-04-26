@@ -1,6 +1,6 @@
 {
   "name": "cordova_permission_control",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Control the permissions that are set by other plugins",
   "cordova": {
     "id": "cordova_permission_control",
