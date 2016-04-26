@@ -4,13 +4,11 @@ module.exports = function(context) {
 	var q = context.requireCordovaModule('q');
 	var fs = context.requireCordovaModule('fs');
 	var path = context.requireCordovaModule('path');
-	var xml = context.requireCordovaModule('cordova-common').xmlHelpers;
 	var cordovaCommon = context.requireCordovaModule('cordova-common');
-	var PlatformMunger = cordovaCommon.ConfigChanges.PlatformMunger;
+	var xml = cordovaCommon.xmlHelpers;
 	var PluginInfo = cordovaCommon.PluginInfo;
-	var PlatformJson = cordovaCommon.PlatformJson;
-	var cordovaLib = context.requireCordovaModule('cordova-lib');
 
+	var cordovaLib = context.requireCordovaModule('cordova-lib');
 	var cordovaPlatforms = cordovaLib.cordova_platforms;
 
 	var inquirer = require('inquirer');
