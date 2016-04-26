@@ -13,6 +13,22 @@ module.exports = function(context) {
 
 	var inquirer = require('inquirer');
 
+	/**
+	 * scan plugin.xml for permissions and return a pluginInfo data structure
+	 * @param String pluginName
+	 *
+	 * @return pluginInfo custom plugin information object
+	 * {
+	 *   permissions: [{
+	 *     name: permissionName,
+	 *     parentElem: XMLNode,
+	 *     platform: platform
+	 *   }],
+	 *   pluginXml: parsedPluginXml
+	 *   pluginXmlFilePath: pathToPluginXml,
+	 *   originalInfo: CordovaCommon.PluginInfo
+ 	 * }
+	 */
 	function lookForPermissions(pluginName) {
 
 		var pluginXmlFilePath = path.join(
@@ -56,11 +72,17 @@ module.exports = function(context) {
 		return pluginInfo;
 	}
 
+	/**
+	 * create the command line prompt based on the retrieved permissions
+	 * @param {Object} pluginInfo
+	 *
+	 * @return Promise Either empty Promise or Iquirer prompt
+	 */
 	function offerChoices(pluginInfo) {
 
 		if(pluginInfo.permissions.length === 0) {
 
-			return pluginInfo;
+			return q();
 		}
 
 		var permissionChoices = pluginInfo.permissions.map(function(permission) {
@@ -77,6 +99,7 @@ module.exports = function(context) {
 
 		return inquirer.prompt([question]).then(function(answers) {
 
+			// filter the permissions based on the answers to keep only the ones which should be removed
 			pluginInfo.permissions = pluginInfo.permissions.filter(function(permission) {
 
 				return answers.permissionsToRemove.indexOf(permission.name + ' (' + permission.platform + ')') !== -1 ? true : false;
@@ -86,13 +109,20 @@ module.exports = function(context) {
 		});
 	}
 
+	/**
+	 * remove the selected permissions from plugin.xml of the plugin
+	 * @param {Object}|undefined pluginInfo
+	 *
+	 * @return Promise Either empty promise or File writer promise
+	 */
 	function removePermissions(pluginInfo) {
 
 		if(!pluginInfo || pluginInfo.permissions.length === 0) {
 
-			return q(pluginInfo);
+			return q();
 		}
 
+		// remove previously selected permissions from plugin.xml
 		pluginInfo.permissions.forEach(function(permission) {
 
 			var selector = '@android:name="' + permission.name + '"';
@@ -109,6 +139,12 @@ module.exports = function(context) {
 		});
 	}
 
+	/**
+	 * update the platform configuration (i.e. android.json in platforms/android)
+	 * @param {Object}|undefined pluginInfo
+	 *
+	 * @return Promise
+	 */
 	function updatePlatformConfig(pluginInfo) {
 
 		if(!pluginInfo || pluginInfo.permissions.length === 0) {
@@ -117,6 +153,7 @@ module.exports = function(context) {
 		}
 
 		var pluginDir = path.dirname(pluginInfo.pluginXmlFilePath);
+		// determine which platform configs have to be updated
 		var platforms = pluginInfo.permissions.map(function(permission) {
 
 			return permission.platform;
@@ -127,15 +164,18 @@ module.exports = function(context) {
 
 		var installedPlatforms = context.opts.cordova.platforms;
 
+		// update all platforms in sequence
 		return platforms.reduce(function(soFar, platform) {
 
 			var platformDir = path.join(context.opts.projectRoot, 'platforms', platform);
 
+			// check if platform is installed
 			if(installedPlatforms.indexOf(platform) === -1) {
 
 				return soFar;
 			}
 
+			// if platform is installed remove the plugin and install it with the updated PluginInfo
 			var platformApi = cordovaPlatforms.getPlatformApi(platform, platformDir);
 			var newInfo = new PluginInfo(path.dirname(pluginInfo.pluginXmlFilePath));
 			var options = {
@@ -155,6 +195,12 @@ module.exports = function(context) {
 		}, q());
 	}
 
+	/**
+	 * initialize the whole permission control function chain
+	 * @param Promise
+	 *
+	 * @return Promise
+	 */
 	function permissionControl(previousValue, currentValue) {
 
 		return previousValue.then(function() {
@@ -167,11 +213,16 @@ module.exports = function(context) {
 		;
 	}
 
+	// find out which plugins where installed just now
 	var oldPlugins = require(path.join(context.opts.plugin.dir, 'pluginNames.json'));
 	var newPlugins = context.opts.cordova.plugins.filter(function(pluginName) {
 
 		return oldPlugins.indexOf(pluginName) === -1;
 	});
 
+	/**
+	 * run tasks in sequence for each platformApi
+	 * @see https://github.com/kriskowal/q#sequences
+	 */
 	return newPlugins.reduce(permissionControl, q());
 };

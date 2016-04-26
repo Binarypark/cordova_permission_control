@@ -7,6 +7,7 @@ module.exports = function(context) {
 
 	var pluginDir = context.opts.plugin.dir;
 
+	// backup names of the installed plugins to compare later which ones are new
 	return q.nfcall(
 		fs.writeFile,
 		path.join(
