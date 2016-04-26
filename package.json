@@ -1,0 +1,39 @@
+{
+  "name": "cordova_permission_control",
+  "version": "0.0.1",
+  "description": "Control the permissions that are set by other plugins",
+  "cordova": {
+    "id": "cordova_permission_control",
+    "platforms": [
+      "android",
+      "amazon-fireos",
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Binarypark/cordova_permission_control.git"
+  },
+  "keywords": [
+    "cordova",
+    "permissions",
+    "permission control",
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-amazon-fireos",
+  ],
+  "engines": [
+    {
+      "name": "cordova",
+      "version": ">=3.0.0"
+    }
+  ],
+  "author": "Matthias Tylkowski",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Binarypark/cordova_permission_control/issues"
+  },
+  "homepage": "https://github.com/Binarypark/cordova_permission_control#readme",
+  "dependencies": {
+
+  }
+}
