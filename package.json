@@ -6,7 +6,7 @@
     "id": "cordova_permission_control",
     "platforms": [
       "android",
-      "amazon-fireos",
+      "amazon-fireos"
     ]
   },
   "repository": {
@@ -19,7 +19,7 @@
     "permission control",
     "ecosystem:cordova",
     "cordova-android",
-    "cordova-amazon-fireos",
+    "cordova-amazon-fireos"
   ],
   "engines": [
     {
@@ -34,6 +34,6 @@
   },
   "homepage": "https://github.com/Binarypark/cordova_permission_control#readme",
   "dependencies": {
-		"inquirer": "^1.0.2"
+    "inquirer": "^1.0.2"
   }
 }
